@@ -63,6 +63,7 @@ function captureScreenshot() {
     canvas.toBlob(function(blob) {
       navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(function() {
         console.log('Screenshot captured and copied to clipboard.');
+        showNotification('Screenshot captured and copied to clipboard.');
       }, function(error) {
         console.error('Error copying to clipboard:', error);
       });
@@ -70,4 +71,22 @@ function captureScreenshot() {
   } else {
     console.log('Video element not found.');
   }
+}
+
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.innerText = message;
+  notification.style.position = 'fixed';
+  notification.style.top = '50%';
+  notification.style.right = '50%';
+  notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
+  notification.style.color = 'white';
+  notification.style.padding = '10px';
+  notification.style.borderRadius = '5px';
+  notification.style.zIndex = 10000;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 1500); // 3초 후에 알림을 제거
 }
