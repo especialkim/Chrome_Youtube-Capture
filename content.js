@@ -60,6 +60,27 @@ function captureScreenshot() {
     canvas.height = videoElement.videoHeight;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+    // 비디오의 현재 시간 가져오기
+    const currentTime = videoElement.currentTime;
+    const hours = Math.floor(currentTime / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((currentTime % 3600) / 60).toString().padStart(2, '0');
+    const seconds = Math.floor(currentTime % 60).toString().padStart(2, '0');
+    const timestamp = `📌 ${hours}:${minutes}:${seconds}`;
+
+    // 타임스탬프 추가
+    ctx.font = '60px Arial';
+    ctx.textBaseline = 'bottom';
+    const textWidth = ctx.measureText(timestamp).width;
+
+    // 글자 영역에만 배경색 추가
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'; // 반투명 검은색 배경
+    ctx.fillRect(canvas.width - textWidth - 50, canvas.height - 100, textWidth + 20, 70);
+
+    // 글자 그리기
+    ctx.fillStyle = 'white';
+    ctx.fillText(timestamp, canvas.width - textWidth - 40, canvas.height - 30);
+
     canvas.toBlob(function(blob) {
       navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(function() {
         console.log('Screenshot captured and copied to clipboard.');
@@ -73,12 +94,13 @@ function captureScreenshot() {
   }
 }
 
+
 function showNotification(message) {
   const notification = document.createElement('div');
   notification.innerText = message;
   notification.style.position = 'fixed';
-  notification.style.top = '50%';
-  notification.style.right = '50%';
+  notification.style.bottom = '10px';
+  notification.style.right = '10px';
   notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
   notification.style.color = 'white';
   notification.style.padding = '10px';
@@ -88,5 +110,5 @@ function showNotification(message) {
   
   setTimeout(() => {
     notification.remove();
-  }, 1500); // 3초 후에 알림을 제거
+  }, 3000); // 3초 후에 알림을 제거
 }
